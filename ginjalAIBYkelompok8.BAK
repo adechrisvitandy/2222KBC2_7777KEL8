@@ -14,14 +14,15 @@ database
             xcari(gejala)
             xgagal(gejala)
 predicates
-            mulai
+  nondeterm mulai
             cari(tanya,gejala)
             gagal(tanya,gejala)
             namakelompok(list)
   nondeterm gejala(gejala)
-            hapus_fakta2
+            hapus_fakta
             simpan(gejala,jawab)
             tanya(tanya,gejala,jawab)
+  nondeterm keluar(char)
             go_once
   nondeterm diagnosa(sakit)
             solusi(sakit)
@@ -31,7 +32,7 @@ goal
 	write("--------------SELAMAT DATANG DI RUMAH SAKIT UNMUL-------------"),nl,
 	write("--------------------DIAGNOSIS PENYAKIT GINJAL--------------"),nl,nl,
 	write("---------------------------------------by-----------------------------"),nl,
-	namakelompok(["Ade chrisvitandy","Gidion lung Tumanan","Awang jordi Saputra"]),nl,nl,
+	namakelompok(["Ade chrisvitandy","Gideon lung Tumanan","Awang jordi Saputra"]),nl,nl,
 	write("SILAHKAN ISI DIAGNOSA DIBAWAH DENGAN KONDISI Y (benar) & T (untuk tidak)"),nl,nl,
         mulai.
 clauses
@@ -42,17 +43,19 @@ clauses
             mulai:-
                         go_once,nl,nl,nl,nl,nl,
                         write("Apakah Ingin mengulang lagi (Y/T) ?"),
-                        readchar(Jawab),nl,
-                        Jawab = 'y',
+                        readchar(Jawab),nl,keluar(Jawab).
+                        keluar(Jawab):-
+                        Jawab='y'.
+                        keluar(Jawab):-
+                        Jawab<>'y',
                         mulai.
             go_once:-
                         diagnosa(_),!,write("Save"),
                         save("simpanginjal.txt"),
-                        hapus_fakta2.
+                        hapus_fakta.
             go_once:-
-                        write("MAAF PROGRAM TIDAK MENEMUKAN PENYAKIT PADA GINJAL YANG DIPERIKSA"),nl,
-                        write("ANDA SEHAT"),nl,
-                        hapus_fakta2.
+                        write("MAAF SAYA TIDAK MENEMUKAN PENYAKIT PADA GINJAL YANG DIPERIKSA"),nl,
+                        hapus_fakta.
             cari(_,Gejala):-write("Apakah "),
                         xcari(Gejala),!.
             cari(Tanya,Gejala):-write(" Anda "),
@@ -74,11 +77,11 @@ clauses
                         asserta(xcari(Gejala)).
             simpan(Gejala,'t'):-
                         asserta(xgagal(Gejala)).
-            hapus_fakta2:-
+            hapus_fakta:-
                         retract(xcari(_)),fail.
-            hapus_fakta2:-
+            hapus_fakta:-
                         retract(xgagal(_)),fail.
-            hapus_fakta2.
+            hapus_fakta.
 
 /*-------------------------------------------------------------G E J A L A-------------------------------------------------------------*/
 
